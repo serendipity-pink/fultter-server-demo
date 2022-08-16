@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="per.pengxin.pearserverapi.dao.ArticleDao">
+    <resultMap type="per.pengxin.pearserverapi.entity.ArticleEntity" id="articleMap">
+        <id property="id" column="a_article_id"/>
+        <result property="userId" column="a_user_id"/>
+        <result property="coverUrlList" column="a_cover_url_list"/>
+        <result property="title" column="a_title"/>
+        <result property="commentCount" column="a_comment_count"/>
+        <result property="thumbUpCount" column="a_thumb_up_count"/>
+        <result property="readCount" column="a_read_count"/>
+        <association property="user" javaType="per.pengxin.pearserverapi.dto.UserDTO">
+            <id property="id" column="u_user_id"/>
+            <result property="coverPictureUrl" column="u_cover_picture_url"/>
+            <result property="nickname" column="u_nickname"/>
+            <result property="type" column="u_type"/>
+            <result property="musicCount" column="u_music_count"/>
+            <result property="musicPlayCount" column="u_music_play_count"/>
+        </association>
+    </resultMap>
+    <sql id="article_all_column">
+        `article`.id             AS a_article_id,
+        `article`.user_id        AS a_user_id,
+        `article`.cover_url_list AS a_cover_url_list,
+        `article`.title          AS a_title,
+        `article`.comment_count  AS a_comment_count,
+        `article`.thumb_up_count AS a_thumb_up_count,
+        `article`.read_count     AS a_read_count
+    </sql>
+
+    <select id="queryDataPage" resultMap="articleMap">
+        SELECT
+        <include refid="article_all_column"/>,
+        <include refid="per.pengxin.pearserverapi.dao.UserDao.user_all_column"/>
+        FROM `article` AS `article`
+                 LEFT JOIN user AS user
+                           ON (`user`.id = article.user_id)
+        WHERE 1 = 1
+    </select>
+
+    <select id="queryDataById" resultMap="articleMap">
+        SELECT
+        <include refid="article_all_column"/>,
+        <include refid="per.pengxin.pearserverapi.dao.UserDao.user_all_column"/>
+        FROM article AS `article`
+                 LEFT JOIN user AS user
+                           ON (article.user_id = user.id)
+        WHERE article.id = #{id}
+    </select>
+</mapper>

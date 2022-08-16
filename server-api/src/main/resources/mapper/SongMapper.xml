@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="per.pengxin.pearserverapi.dao.SongDao">
+    <resultMap type="per.pengxin.pearserverapi.entity.SongEntity" id="songMap">
+        <id property="id" column="s_song_id"/>
+        <result property="userId" column="s_user_id"/>
+        <result property="coverPictureUrl" column="s_cover_picture_url"/>
+        <result property="songUrl" column="s_song_url"/>
+        <result property="cnName" column="s_cn_name"/>
+        <result property="enName" column="s_en_name"/>
+        <result property="commentCount" column="s_comment_count"/>
+        <result property="thumbUpCount" column="s_thumb_up_count"/>
+        <result property="readCount" column="s_read_count"/>
+        <association property="user" javaType="per.pengxin.pearserverapi.dto.UserDTO">
+            <id property="id" column="u_user_id"/>
+            <result property="coverPictureUrl" column="u_cover_picture_url"/>
+            <result property="nickname" column="u_nickname"/>
+            <result property="type" column="u_type"/>
+            <result property="musicCount" column="u_music_count"/>
+            <result property="musicPlayCount" column="u_music_play_count"/>
+        </association>
+    </resultMap>
+    <sql id="song_all_column">
+        `song`.id                AS s_song_id,
+        `song`.user_id           AS s_user_id,
+        `song`.cover_picture_url AS s_cover_picture_url,
+        `song`.song_url          AS s_song_url,
+        `song`.cn_name           AS s_cn_name,
+        `song`.en_name           AS s_en_name,
+        `song`.comment_count     AS s_comment_count,
+        `song`.thumb_up_count    AS s_thumb_up_count,
+        `song`.read_count        AS s_read_count
+    </sql>
+
+    <select id="querySongPage" resultMap="songMap">
+        SELECT
+        <include refid="song_all_column"/>,
+        <include refid="per.pengxin.pearserverapi.dao.UserDao.user_all_column"/>
+        FROM song AS `song`
+                 LEFT JOIN user AS user
+                           ON (`user`.id = song.user_id)
+        WHERE 1 = 1
+    </select>
+
+    <select id="querySongById" resultMap="songMap">
+        SELECT
+        <include refid="song_all_column"/>,
+        <include refid="per.pengxin.pearserverapi.dao.UserDao.user_all_column"/>
+        FROM song AS `song`
+                 LEFT JOIN user AS user
+                           ON (`user`.id = song.user_id)
+        WHERE song.id = #{id}
+    </select>
+</mapper>

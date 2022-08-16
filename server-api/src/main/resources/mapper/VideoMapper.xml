@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="per.pengxin.pearserverapi.dao.VideoDao">
+    <resultMap type="per.pengxin.pearserverapi.entity.VideoEntity" id="videoMap">
+        <id property="id" column="v_video_id"/>
+        <result property="userId" column="v_user_id"/>
+        <result property="coverPictureUrl" column="v_cover_picture_url"/>
+        <result property="title" column="v_title"/>
+        <result property="videoUrl" column="v_video_url"/>
+        <result property="intro" column="v_intro"/>
+        <result property="commentCount" column="v_comment_count"/>
+        <result property="thumbUpCount" column="v_thumb_up_count"/>
+        <result property="readCount" column="v_read_count"/>
+        <result property="shareCount" column="v_share_count"/>
+        <result property="contentSeconds" column="v_content_seconds"/>
+        <association property="user" javaType="per.pengxin.pearserverapi.dto.UserDTO">
+            <id property="id" column="u_user_id"/>
+            <result property="coverPictureUrl" column="u_cover_picture_url"/>
+            <result property="nickname" column="u_nickname"/>
+            <result property="type" column="u_type"/>
+            <result property="musicCount" column="u_music_count"/>
+            <result property="musicPlayCount" column="u_music_play_count"/>
+        </association>
+    </resultMap>
+    <sql id="video_all_column">
+        `video`.id                AS v_video_id,
+        `video`.user_id           AS v_user_id,
+        `video`.cover_picture_url AS v_cover_picture_url,
+        `video`.title             AS v_title,
+        `video`.video_url         AS v_video_url,
+        `video`.intro             AS v_intro,
+        `video`.comment_count     AS v_comment_count,
+        `video`.thumb_up_count    AS v_thumb_up_count,
+        `video`.read_count        AS v_read_count,
+        `video`.share_count       AS v_share_count,
+        `video`.content_seconds   AS v_content_seconds
+    </sql>
+
+    <select id="queryVideoPage" resultMap="videoMap">
+        SELECT
+        <include refid="video_all_column"/>,
+        <include refid="per.pengxin.pearserverapi.dao.UserDao.user_all_column"/>
+        FROM video AS `video`
+                 LEFT JOIN `user` AS `user`
+                           ON (`user`.id = video.user_id)
+        WHERE 1 = 1
+    </select>
+
+    <select id="queryVideoById" resultMap="videoMap">
+        SELECT
+        <include refid="video_all_column"/>,
+        <include refid="per.pengxin.pearserverapi.dao.UserDao.user_all_column"/>
+        FROM video AS `video`
+                 LEFT JOIN `user` AS `user`
+                           ON (`user`.id = video.user_id)
+        WHERE video.id = #{id}
+    </select>
+</mapper>

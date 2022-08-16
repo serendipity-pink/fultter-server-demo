@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="per.pengxin.pearserverapi.dao.UserDao">
+    <resultMap type="per.pengxin.pearserverapi.entity.UserEntity" id="userMap">
+        <id property="id" column="u_user_id"/>
+        <result property="coverPictureUrl" column="u_cover_picture_url"/>
+        <result property="nickname" column="u_nickname"/>
+        <result property="type" column="u_type"/>
+        <result property="musicCount" column="u_music_count"/>
+        <result property="musicPlayCount" column="u_music_play_count"/>
+    </resultMap>
+
+    <sql id="user_all_column">
+        `user`.id                AS u_user_id,
+        `user`.cover_picture_url AS u_cover_picture_url,
+        `user`.nickname          AS u_nickname,
+        `user`.type              AS u_type,
+        `user`.music_count       AS u_music_count,
+        `user`.music_play_count  AS u_music_play_count
+    </sql>
+
+    <!--    <select id="queryUserPage" resultMap="userMap">-->
+    <!--        SELECT-->
+    <!--        <include refid="user_all_column"/>-->
+    <!--        FROM user AS `user`-->
+    <!--                 -->
+    <!--        WHERE `order`.user_id = #{userId}-->
+    <!--    </select>-->
+</mapper>
